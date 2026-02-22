@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block title %}Squads — Focus Battle{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/pages.css') }}"/>{% endblock %}
+{% block content %}
+<div class="page-bg">
+  <div class="grain"></div>
+  <nav class="nav">
+    <div class="nav-brand"><span class="nav-dot">◆</span>FOCUS<span class="nav-em">BATTLE</span></div>
+    <div class="nav-links">
+      <a href="/dashboard">Home</a>
+      <a href="/groups" class="active">Squads</a>
+      <a href="/leaderboard">Leaderboard</a>
+      <a href="/settings">Themes</a>
+      <a href="/logout">Logout</a>
+    </div>
+  </nav>
+  <div class="page-content">
+    <div class="page-header">
+      <p class="page-eyebrow">Private Groups</p>
+      <h1 class="page-title">Your Squads</h1>
+      <p class="page-sub">Battle with your friends. Share a code. Compete privately.</p>
+    </div>
+
+    <div class="groups-actions">
+      <button class="btn btn-coral" id="btn-create">+ Create Squad</button>
+      <button class="btn btn-ghost" id="btn-join">Join with Code</button>
+    </div>
+
+    <div class="groups-grid">
+      {% for g in my_groups %}
+      <a href="/groups/{{ g.id }}" class="group-card">
+        <div class="gc-left">
+          <div class="gc-name">{{ g.name }}</div>
+          <div class="gc-meta">{{ g.member_count }} members · Created by {{ g.creator_name }}</div>
+        </div>
+        <div class="gc-code">{{ g.code }}</div>
+      </a>
+      {% else %}
+      <div class="no-groups">No squads yet. Create one or join with a code.</div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- Create Modal -->
+<div class="modal-overlay hidden" id="modal-create">
+  <div class="modal-box">
+    <h3 class="modal-title">Create Squad</h3>
+    <div class="modal-body">
+      <div class="field">
+        <label>Squad Name</label>
+        <input type="text" id="create-name" placeholder="The Grinders" maxlength="40"/>
+      </div>
+      <p id="create-result" style="font-size:0.85rem;color:var(--mint)"></p>
+      <div class="modal-actions">
+        <button class="btn btn-coral" id="btn-create-confirm">Create →</button>
+        <button class="btn btn-ghost" id="btn-create-cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Join Modal -->
+<div class="modal-overlay hidden" id="modal-join">
+  <div class="modal-box">
+    <h3 class="modal-title">Join Squad</h3>
+    <div class="modal-body">
+      <div class="field">
+        <label>6-Character Code</label>
+        <input type="text" id="join-code" placeholder="ABC123" maxlength="6" style="text-transform:uppercase;letter-spacing:0.2em;font-size:1.2rem"/>
+      </div>
+      <p id="join-result" style="font-size:0.85rem;color:var(--coral)"></p>
+      <div class="modal-actions">
+        <button class="btn btn-mint" id="btn-join-confirm">Join →</button>
+        <button class="btn btn-ghost" id="btn-join-cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/groups.js') }}"></script>
+{% endblock %}

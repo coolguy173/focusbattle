@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}{{ group.name }} — Focus Battle{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/pages.css') }}"/>{% endblock %}
+{% block content %}
+<div class="page-bg">
+  <div class="grain"></div>
+  <nav class="nav">
+    <div class="nav-brand"><span class="nav-dot">◆</span>FOCUS<span class="nav-em">BATTLE</span></div>
+    <div class="nav-links">
+      <a href="/dashboard">Home</a>
+      <a href="/groups" class="active">Squads</a>
+      <a href="/leaderboard">Leaderboard</a>
+      <a href="/logout">Logout</a>
+    </div>
+  </nav>
+  <div class="page-content">
+    <div class="page-header">
+      <p class="page-eyebrow">Squad</p>
+      <h1 class="page-title">{{ group.name }}</h1>
+    </div>
+
+    {% if is_creator %}
+    <div class="group-code-display">
+      <div>
+        <div class="gcd-label">Invite Code</div>
+        <div class="gcd-code">{{ group.code }}</div>
+      </div>
+      <button class="btn btn-ghost" onclick="navigator.clipboard.writeText('{{ group.code }}');this.textContent='Copied!'">Copy</button>
+    </div>
+    {% endif %}
+
+    <div class="group-sections">
+      <!-- Leaderboard -->
+      <div>
+        <p class="group-section-title">Squad Leaderboard</p>
+        <div class="lb-table-wrap">
+          <table class="lb-table">
+            <thead>
+              <tr><th>#</th><th>Fighter</th><th>Wins</th><th>Streak</th></tr>
+            </thead>
+            <tbody>
+              {% for item in members_data %}
+              {% set m = item.member %}
+              <tr class="{% if m.username == user.username %}lb-me{% endif %}">
+                <td class="lb-rank">
+                  {% if loop.index == 1 %}🥇
+                  {% elif loop.index == 2 %}🥈
+                  {% elif loop.index == 3 %}🥉
+                  {% else %}{{ loop.index }}{% endif %}
+                </td>
+                <td class="lb-name">
+                  {{ m.username }}
+                  {% if m.username == user.username %}<span class="you-tag">YOU</span>{% endif %}
+                </td>
+                <td class="lb-wins">{{ m.wins }}</td>
+                <td class="lb-streak">{{ m.streak }}{% if m.streak >= 3 %}🔥{% endif %}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Activity Feed -->
+      <div>
+        <p class="group-section-title">Activity Feed</p>
+        <div class="feed-list">
+          {% for item in feed %}
+          <div class="feed-item">
+            <span class="feed-icon">{% if item.type == 'win' %}🏆{% elif item.type == 'loss' %}💀{% else %}👋{% endif %}</span>
+            <div>
+              <div class="feed-msg">{{ item.message }}</div>
+              <div class="feed-time">{{ item.created_at[:16] }}</div>
+            </div>
+          </div>
+          {% else %}
+          <p class="feed-empty">No activity yet. Start a battle!</p>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

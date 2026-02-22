@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard — Focus Battle{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}"/>
+{% endblock %}
+{% block content %}
+<div class="dash-bg" id="dash-bg">
+  <div class="grain"></div>
+  <nav class="nav" style="position:relative;z-index:10">
+    <div class="nav-brand"><span class="nav-dot">◆</span>FOCUS<span class="nav-em">BATTLE</span></div>
+    <div class="nav-links">
+      <a href="/dashboard" class="active">Home</a>
+      <a href="/groups">Squads</a>
+      <a href="/leaderboard">Leaderboard</a>
+      <a href="/settings">Themes</a>
+      <a href="/logout">Logout</a>
+    </div>
+  </nav>
+
+  <div class="dash-content">
+
+    {% if user.comeback_mode %}
+    <div class="comeback-banner card">
+      <span class="cb-icon">⚡</span>
+      <p><span>COMEBACK MODE</span> — You've been down. Time to rise. This session means more.</p>
+    </div>
+    {% endif %}
+
+    <!-- Hero -->
+    <div class="hero-row">
+      <div class="hero-left">
+        <p class="hero-eyebrow">Welcome back</p>
+        <h1 class="hero-name">{{ user.username }}</h1>
+        <div class="hero-rank">
+          <span class="rank-badge">{{ rank_icon }} {{ rank_name }}</span>
+          <span style="font-size:0.75rem;color:var(--muted)">{{ wr }}% win rate</span>
+        </div>
+        {% if badges %}
+        <div class="hero-badges" style="margin-top:0.75rem">
+          {% for icon, name in badges %}
+          <span class="badge-chip">{{ icon }} {{ name }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- XP Bar -->
+    <div class="xp-bar-wrap">
+      <div class="xp-label"><span>XP</span><span>{{ xp }}</span></div>
+      <div class="xp-track"><div class="xp-fill" style="width:{{ [xp % 1000 / 10, 100] | min }}%"></div></div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card card mint">
+        <div class="stat-num">{{ user.wins }}</div>
+        <div class="stat-lbl">Wins</div>
+      </div>
+      <div class="stat-card card coral">
+        <div class="stat-num">{{ user.losses }}</div>
+        <div class="stat-lbl">Losses</div>
+      </div>
+      <div class="stat-card card amber">
+        <div class="stat-num">{{ user.streak }}🔥</div>
+        <div class="stat-lbl">Streak</div>
+      </div>
+      <div class="stat-card card">
+        <div class="stat-num">{{ user.best_streak }}</div>
+        <div class="stat-lbl">Best Streak</div>
+      </div>
+    </div>
+
+    <!-- Daily Goal -->
+    <div class="daily-goal-row card">
+      <div class="dg-top">
+        <span class="dg-label">Daily Goal</span>
+        <span class="dg-count">{{ user.sessions_today }} / {{ user.daily_goal }} sessions</span>
+      </div>
+      <div class="dg-track">
+        <div class="dg-fill" id="dg-fill" style="width:{{ [user.sessions_today / user.daily_goal * 100, 100] | min }}%"></div>
+      </div>
+    </div>
+
+    <!-- Category -->
+    <div class="launch-section">
+      <p class="section-label">Focus Category</p>
+      <div class="pill-row" id="cat-pills">
+        <button class="pill cat-pill active" data-cat="General">General</button>
+        <button class="pill cat-pill" data-cat="Study">📚 Study</button>
+        <button class="pill cat-pill" data-cat="Work">💼 Work</button>
+        <button class="pill cat-pill" data-cat="Creative">🎨 Creative</button>
+        <button class="pill cat-pill" data-cat="Fitness">💪 Fitness</button>
+      </div>
+    </div>
+
+    <!-- Duration -->
+    <div class="launch-section">
+      <p class="section-label">Duration</p>
+      <div class="pill-row" id="dur-pills">
+        <button class="pill dur-pill" data-min="15">15 min</button>
+        <button class="pill dur-pill" data-min="20">20 min</button>
+        <button class="pill dur-pill active" data-min="25">25 min</button>
+        <button class="pill dur-pill" data-min="30">30 min</button>
+        <button class="pill dur-pill" data-min="45">45 min</button>
+        <button class="pill dur-pill" data-min="60">60 min</button>
+      </div>
+    </div>
+
+    <!-- Start -->
+    <div class="start-btn-wrap">
+      <a class="start-btn" id="start-btn" href="/timer?duration=25&category=General">
+        START BATTLE →
+      </a>
+    </div>
+
+    <!-- Theme strip -->
+    <div class="theme-strip-section">
+      <p class="section-label">Timer Background</p>
+      <div class="theme-thumbs" id="theme-thumbs">
+        <div class="t-thumb active" data-theme="theme-lofi"       style="background-image:url('/static/images/theme-lofi.jpg')"       title="Lo-Fi"></div>
+        <div class="t-thumb"        data-theme="theme-porsche"     style="background-image:url('/static/images/theme-porsche.jpg')"     title="Porsche"></div>
+        <div class="t-thumb"        data-theme="theme-f1"          style="background-image:url('/static/images/theme-f1.jpg')"          title="F1"></div>
+        <div class="t-thumb"        data-theme="theme-nyc"         style="background-image:url('/static/images/theme-nyc.jpg')"         title="Old NYC"></div>
+        <div class="t-thumb"        data-theme="theme-liquid"      style="background-image:url('/static/images/theme-liquid.jpg')"      title="Liquid Metal"></div>
+        <div class="t-thumb"        data-theme="dunes"             style="background-image:url('/static/images/dunes.jpg')"             title="Black Dunes"></div>
+        <div class="t-thumb"        data-theme="theme-penthouse"   style="background-image:url('/static/images/theme-penthouse.jpg')"   title="Penthouse"></div>
+        <div class="t-thumb"        data-theme="theme-tokyo"       style="background-image:url('/static/images/theme-tokyo.jpg')"       title="Tokyo"></div>
+        <div class="t-thumb"        data-theme="theme-starburst"   style="background-image:url('/static/images/theme-starburst.jpg')"   title="Starburst"></div>
+        <div class="t-thumb"        data-theme="theme-bluewave"    style="background-image:url('/static/images/theme-bluewave.jpg')"    title="Blue Wave"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

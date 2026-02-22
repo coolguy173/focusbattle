@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Battle — Focus Battle{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/timer.css') }}"/>{% endblock %}
+{% block content %}
+<div class="timer-page" id="timer-page">
+  <div class="grain"></div>
+
+  <div class="timer-topbar">
+    <span class="timer-back" id="timer-back">← Exit</span>
+    <div class="timer-meta">
+      <span class="timer-category">{{ category }}</span>
+      <button class="sound-btn" id="sound-btn">♪ RAIN</button>
+    </div>
+  </div>
+
+  <div class="timer-core">
+    <p class="timer-greeting">You've got this, <strong>{{ user.username }}</strong></p>
+    <div class="timer-digits" id="timer-digits">{{ duration }}:00</div>
+    <div class="timer-state" id="timer-state">READY</div>
+    <p class="harvey-quote">"{{ quote }}"</p>
+    <div class="timer-controls">
+      <button class="btn-start-timer" id="btn-start">START</button>
+      <button class="btn-abandon hidden" id="btn-abandon">Abandon (counts as loss)</button>
+    </div>
+  </div>
+
+  <div class="timer-progress-bar" id="progress-bar" style="width:100%"></div>
+</div>
+
+<!-- Result Overlay -->
+<div class="result-overlay hidden" id="result-overlay">
+  <div class="result-box" id="result-box">
+    <div class="result-emoji" id="result-emoji">🏆</div>
+    <h2 class="result-title" id="result-title">Victory.</h2>
+    <p class="result-sub" id="result-sub">You stayed locked in.</p>
+    <div class="xp-gained hidden" id="xp-gained">+0 XP</div>
+    <div class="result-stats">
+      <div class="rs"><strong id="r-wins">0</strong><span>Wins</span></div>
+      <div class="rs"><strong id="r-streak">0</strong><span>Streak</span></div>
+      <div class="rs"><strong id="r-losses">0</strong><span>Losses</span></div>
+    </div>
+    <div class="result-actions" id="result-actions">
+      <!-- Populated by JS based on win/loss -->
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+  const DURATION_MINUTES = {{ duration }};
+  const SESSION_CATEGORY = "{{ category }}";
+</script>
+<script src="{{ url_for('static', filename='js/timer.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Sign Up — Focus Battle{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}"/>{% endblock %}
+{% block content %}
+<div class="auth-bg">
+  <div class="grain"></div>
+  <div class="auth-container">
+    <div class="auth-left">
+      <div class="auth-brand">
+        <span class="nav-dot">◆</span>
+        <span>FOCUS</span><span class="nav-em">BATTLE</span>
+      </div>
+      <div class="auth-headline">
+        <h1>Forge your<br/><em>identity.</em></h1>
+        <p>"Winners don't make excuses<br/>when the other side plays the game."<br/><strong>— Harvey Specter</strong></p>
+      </div>
+    </div>
+    <div class="auth-right">
+      <div class="auth-card">
+        <h2>Create fighter</h2>
+        {% if error %}<div class="alert-error" style="margin-bottom:1.25rem">{{ error }}</div>{% endif %}
+        <form method="POST" action="/signup" class="auth-form">
+          <div class="field">
+            <label>Username</label>
+            <input type="text" name="username" placeholder="legend_name" minlength="3" required autocomplete="username"/>
+          </div>
+          <div class="field">
+            <label>Password</label>
+            <input type="password" name="password" placeholder="min 6 characters" minlength="6" required autocomplete="new-password"/>
+          </div>
+          <button type="submit" class="auth-btn">CREATE FIGHTER →</button>
+        </form>
+        <p class="auth-switch">Already fighting? <a href="/login">Sign in</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

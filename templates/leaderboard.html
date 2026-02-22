@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Leaderboard — Focus Battle{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/pages.css') }}"/>{% endblock %}
+{% block content %}
+<div class="page-bg">
+  <div class="grain"></div>
+  <nav class="nav">
+    <div class="nav-brand"><span class="nav-dot">◆</span>FOCUS<span class="nav-em">BATTLE</span></div>
+    <div class="nav-links">
+      <a href="/dashboard">Home</a>
+      <a href="/groups">Squads</a>
+      <a href="/leaderboard" class="active">Leaderboard</a>
+      <a href="/settings">Themes</a>
+      <a href="/logout">Logout</a>
+    </div>
+  </nav>
+  <div class="page-content">
+    <div class="page-header">
+      <p class="page-eyebrow">Hall of Focus</p>
+      <h1 class="page-title">Leaderboard</h1>
+      <p class="page-sub">The fighters who showed up every day.</p>
+    </div>
+    <div class="lb-table-wrap">
+      <table class="lb-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Fighter</th>
+            <th>Rank</th>
+            <th>Wins</th>
+            <th>Losses</th>
+            <th>Streak</th>
+            <th>Best</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in users_data %}
+          {% set u = item.user %}
+          <tr class="{% if u.username == current_user.username %}lb-me{% endif %}">
+            <td class="lb-rank">
+              {% if loop.index == 1 %}🥇
+              {% elif loop.index == 2 %}🥈
+              {% elif loop.index == 3 %}🥉
+              {% else %}{{ loop.index }}{% endif %}
+            </td>
+            <td class="lb-name">
+              {{ u.username }}
+              {% if u.username == current_user.username %}<span class="you-tag">YOU</span>{% endif %}
+            </td>
+            <td><span class="rank-badge">{{ item.rank_icon }} {{ item.rank_name }}</span></td>
+            <td class="lb-wins">{{ u.wins }}</td>
+            <td class="lb-losses">{{ u.losses }}</td>
+            <td class="lb-streak">{{ u.streak }}{% if u.streak >= 3 %}🔥{% endif %}</td>
+            <td>{{ u.best_streak }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="7" class="lb-empty">No battles yet. Be first.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

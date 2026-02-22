@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}Themes — Focus Battle{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/pages.css') }}"/>{% endblock %}
+{% block content %}
+<div class="page-bg">
+  <div class="grain"></div>
+  <nav class="nav">
+    <div class="nav-brand"><span class="nav-dot">◆</span>FOCUS<span class="nav-em">BATTLE</span></div>
+    <div class="nav-links">
+      <a href="/dashboard">Home</a>
+      <a href="/groups">Squads</a>
+      <a href="/leaderboard">Leaderboard</a>
+      <a href="/settings" class="active">Themes</a>
+      <a href="/logout">Logout</a>
+    </div>
+  </nav>
+  <div class="page-content">
+    <div class="page-header">
+      <p class="page-eyebrow">Personalize</p>
+      <h1 class="page-title">Choose Your Arena</h1>
+      <p class="page-sub">This background shows on your timer page.</p>
+    </div>
+
+    <div class="themes-grid">
+      {% set themes = [
+        ('theme-lofi','Lo-Fi Study','/static/images/theme-lofi.jpg'),
+        ('theme-porsche','Porsche Dark','/static/images/theme-porsche.jpg'),
+        ('theme-f1','F1 Night Race','/static/images/theme-f1.jpg'),
+        ('theme-nyc','NYC Skyline','/static/images/theme-nyc.jpg'),
+        ('theme-liquid','Liquid Metal','/static/images/theme-liquid.jpg'),
+        ('dunes','Black Dunes','/static/images/dunes.jpg'),
+        ('theme-penthouse','Penthouse View','/static/images/theme-penthouse.jpg'),
+        ('theme-tokyo','Tokyo Neon','/static/images/theme-tokyo.jpg'),
+        ('theme-starburst','Starburst','/static/images/theme-starburst.jpg'),
+        ('theme-bluewave','Blue Wave','/static/images/theme-bluewave.jpg'),
+      ] %}
+      {% for key, name, img in themes %}
+      <div class="theme-card" data-theme="{{ key }}">
+        <div class="theme-preview" style="background-image:url('{{ img }}')"></div>
+        <div class="theme-info">
+          <span class="theme-name">{{ name }}</span>
+          <span class="theme-check">✓</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div style="display:flex;align-items:center;gap:1.5rem">
+      <button class="btn btn-coral" id="save-theme-btn">Save Theme →</button>
+      <span class="hidden" id="save-msg" style="font-size:0.85rem;color:var(--mint);font-weight:700">✓ Saved!</span>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/settings.js') }}"></script>{% endblock %}
